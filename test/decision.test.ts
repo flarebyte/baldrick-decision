@@ -192,4 +192,19 @@ describe('DecisionManager', () => {
       ]
     `);
   });
+  it('should ask just for the needed parameter', () => {
+    const decisionManager = new DecisionManager(exampleDecision);
+    decisionManager.getRootMainQuestions();
+    decisionManager.pushAutoAnswerTags();
+    decisionManager.getFollowUpMainQuestions();
+    decisionManager.getFollowUpMainQuestions();
+    expect(decisionManager.getMainParameters()).toMatchInlineSnapshot(`
+      Array [
+        Object {
+          "description": "Name of the interface",
+          "title": "name",
+        },
+      ]
+    `);
+  });
 });
