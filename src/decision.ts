@@ -101,6 +101,14 @@ export class DecisionManager {
   pushAnswerTags(tags: string) {
     this.tagManager.push(tags.split(' '));
   }
+  pushAutoAnswerTags() {
+    const autoTags = this.mainDecision.questions
+      .filter((question) => question.trigger === 'auto')
+      .map((question) => question.tags);
+    for (const tag of autoTags) {
+      this.pushAnswerTags(tag);
+    }
+  }
   getMainParameters(): PromptText[] {
     const params = this.mainDecision.parameters.filter((parameter) =>
       this.tagManager.matchTrigger(parameter.trigger)

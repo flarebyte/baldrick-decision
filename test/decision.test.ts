@@ -154,15 +154,42 @@ describe('DecisionManager', () => {
   });
   it('should reach the end of question if selection', () => {
     const decisionManager = new DecisionManager(exampleDecision);
+    decisionManager.getRootMainQuestions();
     decisionManager.pushAnswerTags('extends has/?');
     decisionManager.getFollowUpMainQuestions();
     decisionManager.pushAnswerTags('has/class');
-    expect(decisionManager.getFollowUpMainQuestions()).toHaveLength(0)
+    expect(decisionManager.getFollowUpMainQuestions()).toHaveLength(0);
   });
   it('should reach the end of question even if no selection', () => {
     const decisionManager = new DecisionManager(exampleDecision);
+    decisionManager.getRootMainQuestions();
     decisionManager.pushAnswerTags('extends has/?');
     decisionManager.getFollowUpMainQuestions();
-    expect(decisionManager.getFollowUpMainQuestions()).toHaveLength(0)
+    expect(decisionManager.getFollowUpMainQuestions()).toHaveLength(0);
+  });
+  it('should ask for every parameter if needed', () => {
+    const decisionManager = new DecisionManager(exampleDecision);
+    decisionManager.getRootMainQuestions();
+    decisionManager.pushAutoAnswerTags();
+    decisionManager.pushAnswerTags('extends has/?');
+    decisionManager.getFollowUpMainQuestions();
+    decisionManager.pushAnswerTags('has/class');
+    decisionManager.getFollowUpMainQuestions();
+    expect(decisionManager.getMainParameters()).toMatchInlineSnapshot(`
+      Array [
+        Object {
+          "description": "Name of the interface",
+          "title": "name",
+        },
+        Object {
+          "description": "Name of the base interface",
+          "title": "base_interface",
+        },
+        Object {
+          "description": "Name of the class",
+          "title": "class_name",
+        },
+      ]
+    `);
   });
 });
