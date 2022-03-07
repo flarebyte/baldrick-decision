@@ -105,7 +105,8 @@ const exampleDecision: MainDecision = {
         description: 'Name of the advanced type',
       },
     ],
-    templates: [{
+    templates: [
+      {
         trigger: 'field',
         value: '{{name}}',
       },
@@ -121,15 +122,34 @@ const exampleDecision: MainDecision = {
         trigger: 'field type/advanced',
         value: '{{name}}: {{advanced_type}}',
       },
-
-    ]
+    ],
   },
 };
 
 describe('DecisionManager', () => {
-  it('should provide', () => {
-    const opts = {};
-    const actual = new DecisionManager(exampleDecision);
-    expect(actual).toMatchInlineSnapshot();
+  it('should provide root main questions', () => {
+    const decisionManager = new DecisionManager(exampleDecision);
+    expect(decisionManager.getRootMainQuestions()).toMatchInlineSnapshot(`
+      Array [
+        Object {
+          "description": "Is the interface going to extend another",
+          "title": "This an extension",
+          "value": "extends has/?",
+        },
+      ]
+    `);
+  });
+  it('should provide followup main questions', () => {
+    const decisionManager = new DecisionManager(exampleDecision);
+    decisionManager.pushAnswerTags('extends has/?');
+    expect(decisionManager.getFollowUpMainQuestions()).toMatchInlineSnapshot(`
+      Array [
+        Object {
+          "description": "This interface is going to be a class eventually",
+          "title": "This is going be a class",
+          "value": "has/class",
+        },
+      ]
+    `);
   });
 });

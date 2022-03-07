@@ -11,16 +11,6 @@ interface PromptText {
   description: string;
 }
 
-type PromptQuestions =
-  | {
-      kind: 'choices';
-      choices: PromptChoice[];
-    }
-  | {
-      kind: 'texts';
-      texts: PromptText[];
-    };
-
 interface Question {
   title: string;
   description: string;
@@ -82,23 +72,36 @@ export class DecisionManager {
     );
   }
 
-  getFollowUpMainQuestions(tag: string): PromptQuestions {
+  getMainQuestionsByTag(tag: string): PromptChoice[] {
     const questions = this.#findQuestionsByTrigger(tag);
     const choices: PromptChoice[] = questions.map((question) => ({
       title: question.title,
       description: question.description,
       value: question.tags,
     }));
-    return { kind: 'choices', choices };
+    return choices;
   }
 
-  getRootMainQuestions(): PromptQuestions {
-    return this.getFollowUpMainQuestions('');
+  getRootMainQuestions(): PromptChoice[] {
+    return this.getMainQuestionsByTag('');
+  }
+  getFollowUpMainQuestions(): PromptChoice[] {
+    const openTags = this.tagManager.open();
+    if (openTags.length === 0) {
+      return [];
+    }
+    let choices: PromptChoice[] = [];
+    for (const tag of openTags) {
+      const questions = this.getMainQuestionsByTag(tag);
+      choices = choices.concat(questions);
+      this.tagManager.deleteOpen(tag);
+    }
+    return choices;
   }
   pushAnswerTags(tags: string) {
     this.tagManager.push(tags.split(' '));
   }
-  getMainParameters(): PromptQuestions {
+  getMainParameters(): PromptText[] {
     const params = this.mainDecision.parameters.filter((parameter) =>
       this.tagManager.matchTrigger(parameter.trigger)
     );
@@ -106,7 +109,7 @@ export class DecisionManager {
       title: param.name,
       description: param.description,
     }));
-    return { kind: 'texts', texts };
+    return texts;
   }
   getMainTemplates(): Template[] {
     const templates = this.mainDecision.templates.filter((parameter) =>
