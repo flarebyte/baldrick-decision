@@ -207,4 +207,31 @@ describe('DecisionManager', () => {
       ]
     `);
   });
+  it('should ask for every templates if needed', () => {
+    const decisionManager = new DecisionManager(exampleDecision);
+    decisionManager.getRootMainQuestions();
+    decisionManager.pushAutoAnswerTags();
+    decisionManager.pushAnswerTags('extends has/?');
+    decisionManager.getFollowUpMainQuestions();
+    decisionManager.pushAnswerTags('has/class');
+    decisionManager.getFollowUpMainQuestions();
+    expect(decisionManager.getMainTemplates()).toMatchInlineSnapshot(`
+      Array [
+        Object {
+          "trigger": "interface",
+          "value": "interface {{name}}",
+        },
+        Object {
+          "trigger": "interface extends",
+          "value": "interface {{name}} extends {{base_interface}}",
+        },
+        Object {
+          "trigger": "interface extends has/class",
+          "value": "class {{class_name}} interface {{name}} extends {{base_interface}}
+      {{fragments}}
+      end of class",
+        },
+      ]
+    `);
+  });
 });

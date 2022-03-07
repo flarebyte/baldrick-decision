@@ -32,7 +32,9 @@ export class TagManager {
     return openTag;
   }
   matchTrigger(trigger: string): boolean {
-    return this.tags.has(trigger);
+    const triggerParts = trigger.split(' ');
+    const hasTag = (tag: string) => this.tags.has(tag);
+    return triggerParts.every(hasTag);
   }
   all(): string[] {
     return [...this.tags.values()].sort();
