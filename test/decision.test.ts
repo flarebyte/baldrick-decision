@@ -42,20 +42,21 @@ const exampleDecision: MainDecision = {
   ],
   templates: [
     {
-      trigger: 'interface',
-      value: 'interface {{name}}',
-    },
-    {
-      trigger: 'interface extends',
-      value: 'interface {{name}} extends {{base_interface}}',
-    },
-    {
       trigger: 'interface extends has/class',
       value: [
         'class {{class_name}} interface {{name}} extends {{base_interface}}',
         '{{fragments}}',
         'end of class',
       ].join('\n'),
+    },
+
+    {
+      trigger: 'interface extends',
+      value: 'interface {{name}} extends {{base_interface}}',
+    },
+    {
+      trigger: 'interface',
+      value: 'interface {{name}}',
     },
   ],
   fragment: {
@@ -207,7 +208,7 @@ describe('DecisionManager', () => {
       ]
     `);
   });
-  it('should ask for every templates if needed', () => {
+  it('should the most suitable template', () => {
     const decisionManager = new DecisionManager(exampleDecision);
     decisionManager.getRootMainQuestions();
     decisionManager.pushAutoAnswerTags();
@@ -215,23 +216,26 @@ describe('DecisionManager', () => {
     decisionManager.getFollowUpMainQuestions();
     decisionManager.pushAnswerTags('has/class');
     decisionManager.getFollowUpMainQuestions();
-    expect(decisionManager.getMainTemplates()).toMatchInlineSnapshot(`
-      Array [
-        Object {
-          "trigger": "interface",
-          "value": "interface {{name}}",
-        },
-        Object {
-          "trigger": "interface extends",
-          "value": "interface {{name}} extends {{base_interface}}",
-        },
-        Object {
-          "trigger": "interface extends has/class",
-          "value": "class {{class_name}} interface {{name}} extends {{base_interface}}
+    expect(decisionManager.getMainTemplate()).toMatchInlineSnapshot(`
+      Object {
+        "trigger": "interface extends has/class",
+        "value": "class {{class_name}} interface {{name}} extends {{base_interface}}
       {{fragments}}
       end of class",
-        },
-      ]
+      }
+    `);
+  });
+  it('should the most fallback template', () => {
+    const decisionManager = new DecisionManager(exampleDecision);
+    decisionManager.getRootMainQuestions();
+    decisionManager.pushAutoAnswerTags();
+    decisionManager.getFollowUpMainQuestions();
+    decisionManager.getFollowUpMainQuestions();
+    expect(decisionManager.getMainTemplate()).toMatchInlineSnapshot(`
+      Object {
+        "trigger": "interface",
+        "value": "interface {{name}}",
+      }
     `);
   });
 });

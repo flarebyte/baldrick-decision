@@ -119,10 +119,11 @@ export class DecisionManager {
     }));
     return texts;
   }
-  getMainTemplates(): Template[] {
+  getMainTemplate(): Template | false {
     const templates = this.mainDecision.templates.filter((parameter) =>
       this.tagManager.matchTrigger(parameter.trigger)
     );
-    return templates;
+    const template = templates[0];
+    return template ? template : false;
   }
 }
