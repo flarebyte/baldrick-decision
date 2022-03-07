@@ -1,4 +1,4 @@
-import { Tags } from "./tag";
+import { TagManager } from './tag';
 
 interface PromptChoice {
   title: string;
@@ -10,7 +10,7 @@ interface Question {
   title: string;
   description: string;
   trigger: string;
-  tags: Tags;
+  tags: string;
 }
 
 interface Parameter {
@@ -32,7 +32,7 @@ interface DecisionRoute {
   templates: Template[];
 }
 
-interface MainDecision extends DecisionRoute {
+export interface MainDecision extends DecisionRoute {
   fragments: DecisionRoute[];
 }
 
@@ -53,19 +53,10 @@ export class DecisionStore {
   }
 }
 
-class DecisionProgress {
-  tagsStack = new Array<Tags>();
-  pushTags(tags: string[]) {
-    return this.tagsStack.push(tags);
-  }
-  popTags() {
-    return this.tagsStack.pop();
-  }
-}
-
-class DecisionManager {
+export class DecisionManager {
+  tagManager = new TagManager();
   mainDecision: MainDecision;
-  progress = new DecisionProgress();
+
   constructor(mainDecision: MainDecision) {
     this.mainDecision = mainDecision;
   }
