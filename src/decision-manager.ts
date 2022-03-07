@@ -1,3 +1,5 @@
+import { Tags } from "./tag";
+
 interface PromptChoice {
   title: string;
   description: string;
@@ -7,7 +9,8 @@ interface PromptChoice {
 interface Question {
   title: string;
   description: string;
-  tags: string[];
+  trigger: string;
+  tags: Tags;
 }
 
 interface Parameter {
@@ -50,8 +53,19 @@ export class DecisionStore {
   }
 }
 
+class DecisionProgress {
+  tagsStack = new Array<Tags>();
+  pushTags(tags: string[]) {
+    return this.tagsStack.push(tags);
+  }
+  popTags() {
+    return this.tagsStack.pop();
+  }
+}
+
 class DecisionManager {
   mainDecision: MainDecision;
+  progress = new DecisionProgress();
   constructor(mainDecision: MainDecision) {
     this.mainDecision = mainDecision;
   }
