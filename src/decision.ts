@@ -33,7 +33,7 @@ interface DecisionRoute {
 }
 
 export interface MainDecision extends DecisionRoute {
-  fragments: DecisionRoute[];
+  fragment: DecisionRoute;
 }
 
 export class DecisionStore {

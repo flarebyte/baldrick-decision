@@ -51,11 +51,79 @@ const exampleDecision: MainDecision = {
     },
     {
       trigger: 'interface extends has/class',
-      value:
+      value: [
         'class {{class_name}} interface {{name}} extends {{base_interface}}',
+        '{{fragments}}',
+        'end of class',
+      ].join('\n'),
     },
   ],
-  fragments: [],
+  fragment: {
+    title: 'field',
+    description: 'Description of a field',
+    questions: [
+      {
+        title: 'This is a field',
+        description: 'Is this a field',
+        tags: 'field',
+        trigger: 'auto',
+      },
+      {
+        title: 'has a type',
+        description: 'Type of the field',
+        tags: 'type/?',
+        trigger: '',
+      },
+      {
+        title: 'string',
+        description: 'This is a string field',
+        tags: 'type/string',
+        trigger: 'type/?',
+      },
+      {
+        title: 'boolean',
+        description: 'This is a boolean field',
+        tags: 'type/boolean',
+        trigger: 'type/?',
+      },
+      {
+        title: 'Advanced type',
+        description: 'This is an advanced type field',
+        tags: 'type/advanced',
+        trigger: 'type/?',
+      },
+    ],
+    parameters: [
+      {
+        trigger: 'field',
+        name: 'name',
+        description: 'Name of the field',
+      },
+      {
+        trigger: 'type/advanced',
+        name: 'advanced_type',
+        description: 'Name of the advanced type',
+      },
+    ],
+    templates: [{
+        trigger: 'field',
+        value: '{{name}}',
+      },
+      {
+        trigger: 'field type/string',
+        value: '{{name}}: string',
+      },
+      {
+        trigger: 'field type/boolean',
+        value: '{{name}}: boolean',
+      },
+      {
+        trigger: 'field type/advanced',
+        value: '{{name}}: {{advanced_type}}',
+      },
+
+    ]
+  },
 };
 
 describe('DecisionManager', () => {
