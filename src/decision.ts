@@ -17,7 +17,7 @@ type PromptQuestions =
       choices: PromptChoice[];
     }
   | {
-      kind: 'text';
+      kind: 'texts';
       texts: PromptText[];
     };
 
@@ -97,5 +97,21 @@ export class DecisionManager {
   }
   pushAnswerTags(tags: string) {
     this.tagManager.push(tags.split(' '));
+  }
+  getMainParameters(): PromptQuestions {
+    const params = this.mainDecision.parameters.filter((parameter) =>
+      this.tagManager.matchTrigger(parameter.trigger)
+    );
+    const texts: PromptText[] = params.map((param) => ({
+      title: param.name,
+      description: param.description,
+    }));
+    return { kind: 'texts', texts };
+  }
+  getMainTemplates(): Template[] {
+    const templates = this.mainDecision.templates.filter((parameter) =>
+      this.tagManager.matchTrigger(parameter.trigger)
+    );
+    return templates;
   }
 }
