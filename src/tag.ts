@@ -34,7 +34,10 @@ export class TagManager {
   matchTrigger(trigger: string): boolean {
     return this.tags.has(trigger);
   }
-  all(): string[]{
-    return [...this.tags.values()].sort()
+  all(): string[] {
+    return [...this.tags.values()].sort();
+  }
+  isEmpty(): boolean {
+    return this.tags.size === 0;
   }
 }

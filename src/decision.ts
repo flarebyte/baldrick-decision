@@ -6,6 +6,21 @@ interface PromptChoice {
   value: string;
 }
 
+interface PromptText {
+  title: string;
+  description: string;
+}
+
+type PromptQuestions =
+  | {
+      kind: 'choices';
+      choices: PromptChoice[];
+    }
+  | {
+      kind: 'text';
+      texts: PromptText[];
+    };
+
 interface Question {
   title: string;
   description: string;
@@ -59,5 +74,28 @@ export class DecisionManager {
 
   constructor(mainDecision: MainDecision) {
     this.mainDecision = mainDecision;
+  }
+
+  #findQuestionsByTrigger(trigger: string): Question[] {
+    return this.mainDecision.questions.filter(
+      (question) => question.trigger === trigger
+    );
+  }
+
+  getFollowUpMainQuestions(tag: string): PromptQuestions {
+    const questions = this.#findQuestionsByTrigger(tag);
+    const choices: PromptChoice[] = questions.map((question) => ({
+      title: question.title,
+      description: question.description,
+      value: question.tags,
+    }));
+    return { kind: 'choices', choices };
+  }
+
+  getRootMainQuestions(): PromptQuestions {
+    return this.getFollowUpMainQuestions('');
+  }
+  pushAnswerTags(tags: string) {
+    this.tagManager.push(tags.split(' '));
   }
 }
