@@ -139,7 +139,7 @@ describe('DecisionManager', () => {
       ]
     `);
   });
-  it('should provide followup main questions', () => {
+  it('should provide follow up main questions', () => {
     const decisionManager = new DecisionManager(exampleDecision);
     decisionManager.pushAnswerTags('extends has/?');
     expect(decisionManager.getFollowUpMainQuestions()).toMatchInlineSnapshot(`
@@ -151,5 +151,18 @@ describe('DecisionManager', () => {
         },
       ]
     `);
+  });
+  it('should reach the end of question if selection', () => {
+    const decisionManager = new DecisionManager(exampleDecision);
+    decisionManager.pushAnswerTags('extends has/?');
+    decisionManager.getFollowUpMainQuestions();
+    decisionManager.pushAnswerTags('has/class');
+    expect(decisionManager.getFollowUpMainQuestions()).toHaveLength(0)
+  });
+  it('should reach the end of question even if no selection', () => {
+    const decisionManager = new DecisionManager(exampleDecision);
+    decisionManager.pushAnswerTags('extends has/?');
+    decisionManager.getFollowUpMainQuestions();
+    expect(decisionManager.getFollowUpMainQuestions()).toHaveLength(0)
   });
 });
