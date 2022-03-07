@@ -10,7 +10,7 @@ type FreeDecisionRow = Omit<DecisionRow, 'id'>;
 
 type DecisionRowCsv = [string, string, string, string, string];
 
-class DecisionTable {
+export class DecisionTable {
   counter: number = 0;
   arrayTable = new Array<DecisionRow>();
 
