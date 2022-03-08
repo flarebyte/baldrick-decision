@@ -7,8 +7,8 @@ interface PromptChoice {
 }
 
 interface PromptText {
-  title: string;
-  description: string;
+  name: string;
+  message: string;
 }
 
 interface Question {
@@ -114,8 +114,8 @@ export class DecisionManager {
       this.tagManager.matchTrigger(parameter.trigger)
     );
     const texts: PromptText[] = params.map((param) => ({
-      title: param.name,
-      description: param.description,
+      name: param.name,
+      message: param.description,
     }));
     return texts;
   }

@@ -179,16 +179,16 @@ describe('DecisionManager', () => {
     expect(decisionManager.getMainParameters()).toMatchInlineSnapshot(`
       Array [
         Object {
-          "description": "Name of the interface",
-          "title": "name",
+          "message": "Name of the interface",
+          "name": "name",
         },
         Object {
-          "description": "Name of the base interface",
-          "title": "base_interface",
+          "message": "Name of the base interface",
+          "name": "base_interface",
         },
         Object {
-          "description": "Name of the class",
-          "title": "class_name",
+          "message": "Name of the class",
+          "name": "class_name",
         },
       ]
     `);
@@ -202,8 +202,8 @@ describe('DecisionManager', () => {
     expect(decisionManager.getMainParameters()).toMatchInlineSnapshot(`
       Array [
         Object {
-          "description": "Name of the interface",
-          "title": "name",
+          "message": "Name of the interface",
+          "name": "name",
         },
       ]
     `);
