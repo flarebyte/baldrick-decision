@@ -237,5 +237,17 @@ describe('DecisionManager', () => {
         "value": "interface {{name}}",
       }
     `);
+    decisionManager.setMainDecisionTaken([{ name: 'name', value: 'Commands' }]);
+    expect(decisionManager.getMainDecisionTaken()).toMatchInlineSnapshot(`
+      Object {
+        "parameters": Array [
+          Object {
+            "name": "name",
+            "value": "Commands",
+          },
+        ],
+        "template": "interface {{name}}",
+      }
+    `);
   });
 });

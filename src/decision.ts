@@ -37,6 +37,20 @@ interface DecisionRoute {
   templates: Template[];
 }
 
+interface ParameterValue {
+  name: string;
+  value: string;
+}
+interface DecisionTaken {
+  parameters: ParameterValue[];
+  template: string;
+}
+
+const noDecisionTaken: DecisionTaken = {
+  parameters: [],
+  template: '',
+};
+
 export interface MainDecision extends DecisionRoute {
   fragment: DecisionRoute;
 }
@@ -61,6 +75,7 @@ export class DecisionStore {
 export class DecisionManager {
   tagManager = new TagManager();
   mainDecision: MainDecision;
+  mainDecisionTaken: DecisionTaken = noDecisionTaken;
 
   constructor(mainDecision: MainDecision) {
     this.mainDecision = mainDecision;
@@ -125,5 +140,14 @@ export class DecisionManager {
     );
     const template = templates[0];
     return template ? template : false;
+  }
+  setMainDecisionTaken(parameters: ParameterValue[]) {
+    const mainTemplate = this.getMainTemplate();
+    const template = mainTemplate ? mainTemplate.value : 'no-template-found';
+    const decisionTaken: DecisionTaken = { parameters, template };
+    this.mainDecisionTaken = decisionTaken;
+  }
+  getMainDecisionTaken(): DecisionTaken {
+    return this.mainDecisionTaken;
   }
 }
