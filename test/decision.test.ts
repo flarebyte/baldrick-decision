@@ -171,7 +171,7 @@ describe('DecisionManager', () => {
   it('should ask for every parameter if needed', () => {
     const decisionManager = new DecisionManager(exampleDecision);
     decisionManager.getRootMainQuestions();
-    decisionManager.pushAutoAnswerTags();
+    decisionManager.pushMainAutoAnswerTags();
     decisionManager.pushAnswerTags('extends has/?');
     decisionManager.getFollowUpMainQuestions();
     decisionManager.pushAnswerTags('has/class');
@@ -196,7 +196,7 @@ describe('DecisionManager', () => {
   it('should ask just for the needed parameter', () => {
     const decisionManager = new DecisionManager(exampleDecision);
     decisionManager.getRootMainQuestions();
-    decisionManager.pushAutoAnswerTags();
+    decisionManager.pushMainAutoAnswerTags();
     decisionManager.getFollowUpMainQuestions();
     decisionManager.getFollowUpMainQuestions();
     expect(decisionManager.getMainParameters()).toMatchInlineSnapshot(`
@@ -211,7 +211,7 @@ describe('DecisionManager', () => {
   it('should the most suitable template', () => {
     const decisionManager = new DecisionManager(exampleDecision);
     decisionManager.getRootMainQuestions();
-    decisionManager.pushAutoAnswerTags();
+    decisionManager.pushMainAutoAnswerTags();
     decisionManager.pushAnswerTags('extends has/?');
     decisionManager.getFollowUpMainQuestions();
     decisionManager.pushAnswerTags('has/class');
@@ -228,7 +228,7 @@ describe('DecisionManager', () => {
   it('should the most fallback template', () => {
     const decisionManager = new DecisionManager(exampleDecision);
     decisionManager.getRootMainQuestions();
-    decisionManager.pushAutoAnswerTags();
+    decisionManager.pushMainAutoAnswerTags();
     decisionManager.getFollowUpMainQuestions();
     decisionManager.getFollowUpMainQuestions();
     expect(decisionManager.getMainTemplate()).toMatchInlineSnapshot(`
