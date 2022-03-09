@@ -1,5 +1,57 @@
-import { JSONSchemaType } from "ajv";
-import { MainDecision } from "./decision";
+import { JSONSchemaType } from 'ajv';
+import { MainDecision } from './decision';
+
+type Question = MainDecision['questions'][number];
+type Parameter = MainDecision['parameters'][number];
+type Template = MainDecision['templates'][number];
+
+const questionSchema: JSONSchemaType<Question> = {
+  type: 'object',
+  properties: {
+    title: {
+      type: 'string',
+    },
+    description: {
+      type: 'string',
+    },
+    tags: {
+      type: 'string',
+    },
+    trigger: {
+      type: 'string',
+    },
+  },
+  required: ['title', 'description', 'tags', 'trigger'],
+};
+
+const parameterSchema: JSONSchemaType<Parameter> = {
+  type: 'object',
+  properties: {
+    trigger: {
+      type: 'string',
+    },
+    name: {
+      type: 'string',
+    },
+    description: {
+      type: 'string',
+    },
+  },
+  required: ['trigger', 'name', 'description'],
+};
+
+const templateSchema: JSONSchemaType<Template> = {
+  type: 'object',
+  properties: {
+    trigger: {
+      type: 'string',
+    },
+    value: {
+      type: 'string',
+    },
+  },
+  required: ['trigger', 'value'],
+};
 
 export const decisionSchema: JSONSchemaType<MainDecision> = {
   type: 'object',
@@ -12,153 +64,15 @@ export const decisionSchema: JSONSchemaType<MainDecision> = {
     },
     questions: {
       type: 'array',
-      items: [
-        {
-          type: 'object',
-          properties: {
-            title: {
-              type: 'string',
-            },
-            description: {
-              type: 'string',
-            },
-            tags: {
-              type: 'string',
-            },
-            trigger: {
-              type: 'string',
-            },
-          },
-          required: ['title', 'description', 'tags', 'trigger'],
-        },
-        {
-          type: 'object',
-          properties: {
-            title: {
-              type: 'string',
-            },
-            description: {
-              type: 'string',
-            },
-            tags: {
-              type: 'string',
-            },
-            trigger: {
-              type: 'string',
-            },
-          },
-          required: ['title', 'description', 'tags', 'trigger'],
-        },
-        {
-          type: 'object',
-          properties: {
-            title: {
-              type: 'string',
-            },
-            description: {
-              type: 'string',
-            },
-            tags: {
-              type: 'string',
-            },
-            trigger: {
-              type: 'string',
-            },
-          },
-          required: ['title', 'description', 'tags', 'trigger'],
-        },
-      ],
+      items: questionSchema,
     },
     parameters: {
       type: 'array',
-      items: [
-        {
-          type: 'object',
-          properties: {
-            trigger: {
-              type: 'string',
-            },
-            name: {
-              type: 'string',
-            },
-            description: {
-              type: 'string',
-            },
-          },
-          required: ['trigger', 'name', 'description'],
-        },
-        {
-          type: 'object',
-          properties: {
-            trigger: {
-              type: 'string',
-            },
-            name: {
-              type: 'string',
-            },
-            description: {
-              type: 'string',
-            },
-          },
-          required: ['trigger', 'name', 'description'],
-        },
-        {
-          type: 'object',
-          properties: {
-            trigger: {
-              type: 'string',
-            },
-            name: {
-              type: 'string',
-            },
-            description: {
-              type: 'string',
-            },
-          },
-          required: ['trigger', 'name', 'description'],
-        },
-      ],
+      items: parameterSchema,
     },
     templates: {
       type: 'array',
-      items: [
-        {
-          type: 'object',
-          properties: {
-            trigger: {
-              type: 'string',
-            },
-            value: {
-              type: 'string',
-            },
-          },
-          required: ['trigger', 'value'],
-        },
-        {
-          type: 'object',
-          properties: {
-            trigger: {
-              type: 'string',
-            },
-            value: {
-              type: 'string',
-            },
-          },
-          required: ['trigger', 'value'],
-        },
-        {
-          type: 'object',
-          properties: {
-            trigger: {
-              type: 'string',
-            },
-            value: {
-              type: 'string',
-            },
-          },
-          required: ['trigger', 'value'],
-        },
-      ],
+      items: templateSchema,
     },
     fragment: {
       type: 'object',
@@ -171,195 +85,17 @@ export const decisionSchema: JSONSchemaType<MainDecision> = {
         },
         questions: {
           type: 'array',
-          items: [
-            {
-              type: 'object',
-              properties: {
-                title: {
-                  type: 'string',
-                },
-                description: {
-                  type: 'string',
-                },
-                tags: {
-                  type: 'string',
-                },
-                trigger: {
-                  type: 'string',
-                },
-              },
-              required: ['title', 'description', 'tags', 'trigger'],
-            },
-            {
-              type: 'object',
-              properties: {
-                title: {
-                  type: 'string',
-                },
-                description: {
-                  type: 'string',
-                },
-                tags: {
-                  type: 'string',
-                },
-                trigger: {
-                  type: 'string',
-                },
-              },
-              required: ['title', 'description', 'tags', 'trigger'],
-            },
-            {
-              type: 'object',
-              properties: {
-                title: {
-                  type: 'string',
-                },
-                description: {
-                  type: 'string',
-                },
-                tags: {
-                  type: 'string',
-                },
-                trigger: {
-                  type: 'string',
-                },
-              },
-              required: ['title', 'description', 'tags', 'trigger'],
-            },
-            {
-              type: 'object',
-              properties: {
-                title: {
-                  type: 'string',
-                },
-                description: {
-                  type: 'string',
-                },
-                tags: {
-                  type: 'string',
-                },
-                trigger: {
-                  type: 'string',
-                },
-              },
-              required: ['title', 'description', 'tags', 'trigger'],
-            },
-            {
-              type: 'object',
-              properties: {
-                title: {
-                  type: 'string',
-                },
-                description: {
-                  type: 'string',
-                },
-                tags: {
-                  type: 'string',
-                },
-                trigger: {
-                  type: 'string',
-                },
-              },
-              required: ['title', 'description', 'tags', 'trigger'],
-            },
-          ],
+          items: questionSchema,
         },
         parameters: {
           type: 'array',
-          items: [
-            {
-              type: 'object',
-              properties: {
-                trigger: {
-                  type: 'string',
-                },
-                name: {
-                  type: 'string',
-                },
-                description: {
-                  type: 'string',
-                },
-              },
-              required: ['trigger', 'name', 'description'],
-            },
-            {
-              type: 'object',
-              properties: {
-                trigger: {
-                  type: 'string',
-                },
-                name: {
-                  type: 'string',
-                },
-                description: {
-                  type: 'string',
-                },
-              },
-              required: ['trigger', 'name', 'description'],
-            },
-          ],
+          items: parameterSchema,
         },
         templates: {
           type: 'array',
-          items: [
-            {
-              type: 'object',
-              properties: {
-                trigger: {
-                  type: 'string',
-                },
-                value: {
-                  type: 'string',
-                },
-              },
-              required: ['trigger', 'value'],
-            },
-            {
-              type: 'object',
-              properties: {
-                trigger: {
-                  type: 'string',
-                },
-                value: {
-                  type: 'string',
-                },
-              },
-              required: ['trigger', 'value'],
-            },
-            {
-              type: 'object',
-              properties: {
-                trigger: {
-                  type: 'string',
-                },
-                value: {
-                  type: 'string',
-                },
-              },
-              required: ['trigger', 'value'],
-            },
-            {
-              type: 'object',
-              properties: {
-                trigger: {
-                  type: 'string',
-                },
-                value: {
-                  type: 'string',
-                },
-              },
-              required: ['trigger', 'value'],
-            },
-          ],
+          items: templateSchema,
         },
       },
-      required: [
-        'title',
-        'description',
-        'questions',
-        'parameters',
-        'templates',
-      ],
     },
   },
   required: [
