@@ -55,22 +55,6 @@ export interface MainDecision extends DecisionRoute {
   fragment: DecisionRoute;
 }
 
-export class DecisionStore {
-  decisions: MainDecision[] = [];
-  load(mainDecision: MainDecision) {
-    this.decisions.push(mainDecision);
-  }
-  toChoices(): PromptChoice[] {
-    return this.decisions.map((decision) => ({
-      title: decision.title,
-      description: decision.description,
-      value: decision.title,
-    }));
-  }
-  getByChoiceValue(value: string): MainDecision | false {
-    return this.decisions.find((decision) => decision.title === value) || false;
-  }
-}
 
 export class DecisionManager {
   mainDecision: MainDecision;
@@ -85,13 +69,19 @@ export class DecisionManager {
   #resetTagManager() {
     this.tagManager = new TagManager();
   }
-  #findScopeQuestionsByTrigger(decisionRoute: DecisionRoute, trigger: string): Question[] {
+  #findScopeQuestionsByTrigger(
+    decisionRoute: DecisionRoute,
+    trigger: string
+  ): Question[] {
     return decisionRoute.questions.filter(
       (question) => question.trigger === trigger
     );
   }
-  
-  #getScopeQuestionsByTag(decisionRoute: DecisionRoute, tag: string): PromptChoice[] {
+
+  #getScopeQuestionsByTag(
+    decisionRoute: DecisionRoute,
+    tag: string
+  ): PromptChoice[] {
     const questions = this.#findScopeQuestionsByTrigger(decisionRoute, tag);
     const choices: PromptChoice[] = questions.map((question) => ({
       title: question.title,
@@ -130,10 +120,10 @@ export class DecisionManager {
     return choices;
   }
   getFollowUpMainQuestions(): PromptChoice[] {
-    return this.#getFollowUpScopeQuestions(this.mainDecision)
+    return this.#getFollowUpScopeQuestions(this.mainDecision);
   }
   getFollowUpFragmentQuestions(): PromptChoice[] {
-    return this.#getFollowUpScopeQuestions(this.mainDecision.fragment)
+    return this.#getFollowUpScopeQuestions(this.mainDecision.fragment);
   }
   pushAnswerTags(tags: string) {
     this.tagManager.push(tags.split(' '));
@@ -148,10 +138,10 @@ export class DecisionManager {
     }
   }
   pushMainAutoAnswerTags() {
-    this.#pushScopeAutoAnswerTags(this.mainDecision)
+    this.#pushScopeAutoAnswerTags(this.mainDecision);
   }
   pushFragmentAutoAnswerTags() {
-    this.#pushScopeAutoAnswerTags(this.mainDecision.fragment)
+    this.#pushScopeAutoAnswerTags(this.mainDecision.fragment);
   }
   #getScopeParameters(decisionRoute: DecisionRoute): PromptText[] {
     const params = decisionRoute.parameters.filter((parameter) =>
@@ -164,11 +154,11 @@ export class DecisionManager {
     return texts;
   }
   getMainParameters(): PromptText[] {
-    return this.#getScopeParameters(this.mainDecision)
+    return this.#getScopeParameters(this.mainDecision);
   }
 
   getFragmentParameters(): PromptText[] {
-    return this.#getScopeParameters(this.mainDecision.fragment)
+    return this.#getScopeParameters(this.mainDecision.fragment);
   }
   #getScopeTemplate(decisionRoute: DecisionRoute): Template | false {
     const templates = decisionRoute.templates.filter((parameter) =>
@@ -178,10 +168,10 @@ export class DecisionManager {
     return template ? template : false;
   }
   getMainTemplate(): Template | false {
-    return this.#getScopeTemplate(this.mainDecision)
+    return this.#getScopeTemplate(this.mainDecision);
   }
   getFragmentTemplate(): Template | false {
-    return this.#getScopeTemplate(this.mainDecision.fragment)
+    return this.#getScopeTemplate(this.mainDecision.fragment);
   }
   setMainDecisionTaken(parameters: ParameterValue[]) {
     const mainTemplate = this.getMainTemplate();
@@ -192,5 +182,19 @@ export class DecisionManager {
   }
   getMainDecisionTaken(): DecisionTaken {
     return this.mainDecisionTaken;
+  }
+
+  addFragmentDecisionTaken(parameters: ParameterValue[]) {
+    const fragmentTemplate = this.getFragmentTemplate();
+    const template = fragmentTemplate
+      ? fragmentTemplate.value
+      : 'no-template-found';
+    const decisionTaken: DecisionTaken = { parameters, template };
+    this.fragmentDecisionTakenList.push(decisionTaken);
+    this.#resetTagManager();
+  }
+
+  getFragmentDecisionTakenList(): DecisionTaken[] {
+    return this.fragmentDecisionTakenList;
   }
 }

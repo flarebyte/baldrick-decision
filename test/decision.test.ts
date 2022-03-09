@@ -108,10 +108,6 @@ const exampleDecision: MainDecision = {
     ],
     templates: [
       {
-        trigger: 'field',
-        value: '{{name}}',
-      },
-      {
         trigger: 'field type/string',
         value: '{{name}}: string',
       },
@@ -123,12 +119,17 @@ const exampleDecision: MainDecision = {
         trigger: 'field type/advanced',
         value: '{{name}}: {{advanced_type}}',
       },
+      {
+        trigger: 'field',
+        value: '{{name}}',
+      },
     ],
   },
 };
 
 describe('DecisionManager', () => {
   it('should provide root main questions', () => {
+    console.log(JSON.stringify(exampleDecision, null, 2))
     const decisionManager = new DecisionManager(exampleDecision);
     expect(decisionManager.getRootMainQuestions()).toMatchInlineSnapshot(`
       Array [
@@ -248,6 +249,60 @@ describe('DecisionManager', () => {
         ],
         "template": "interface {{name}}",
       }
+    `);
+  });
+  it('should ask for fragment as well', () => {
+    const decisionManager = new DecisionManager(exampleDecision);
+    decisionManager.getRootMainQuestions();
+    decisionManager.pushMainAutoAnswerTags();
+    decisionManager.getFollowUpMainQuestions();
+    decisionManager.getFollowUpMainQuestions();
+    decisionManager.setMainDecisionTaken([{ name: 'name', value: 'Commands' }]);
+
+    // First field
+    decisionManager.getRootFragmentQuestions();
+    decisionManager.pushFragmentAutoAnswerTags();
+    decisionManager.getFollowUpFragmentQuestions();
+    decisionManager.getFollowUpFragmentQuestions();
+    decisionManager.getFollowUpFragmentQuestions();
+    decisionManager.addFragmentDecisionTaken([
+      { name: 'name', value: 'description' },
+    ]);
+
+    // Second field
+    decisionManager.getRootFragmentQuestions();
+    decisionManager.pushFragmentAutoAnswerTags();
+    decisionManager.pushAnswerTags('type/?');
+    decisionManager.getFollowUpFragmentQuestions();
+    decisionManager.pushAnswerTags('type/string');
+    decisionManager.getFollowUpFragmentQuestions();
+    decisionManager.getFollowUpFragmentQuestions();
+    decisionManager.addFragmentDecisionTaken([
+      { name: 'name', value: 'title' },
+    ]);
+
+    expect(decisionManager.getFragmentDecisionTakenList())
+      .toMatchInlineSnapshot(`
+      Array [
+        Object {
+          "parameters": Array [
+            Object {
+              "name": "name",
+              "value": "description",
+            },
+          ],
+          "template": "{{name}}",
+        },
+        Object {
+          "parameters": Array [
+            Object {
+              "name": "name",
+              "value": "title",
+            },
+          ],
+          "template": "{{name}}: string",
+        },
+      ]
     `);
   });
 });
