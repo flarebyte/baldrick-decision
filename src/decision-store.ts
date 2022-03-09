@@ -1,7 +1,6 @@
 import YAML from 'yaml';
-import Ajv from 'ajv';
 import { MainDecision } from './decision';
-import { decisionSchema } from './decision-schema';
+import { createMainDecisionValidator } from './decision-schema';
 
 interface PromptChoice {
   title: string;
@@ -9,15 +8,10 @@ interface PromptChoice {
   value: string;
 }
 
-const createValidator = () => {
-  const ajv = new Ajv();
-  return ajv.compile<MainDecision>(decisionSchema);
-};
-
 export class DecisionStore {
   decisions: MainDecision[] = [];
   messages: string[] = [];
-  validateDecision = createValidator();
+  validateDecision = createMainDecisionValidator();
   #load(mainDecision: MainDecision) {
     this.decisions.push(mainDecision);
   }

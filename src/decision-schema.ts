@@ -1,3 +1,4 @@
+import Ajv from 'ajv';
 import { JSONSchemaType } from 'ajv';
 import { MainDecision } from './decision';
 
@@ -113,4 +114,9 @@ export const decisionSchema: JSONSchemaType<MainDecision> = {
     'templates',
     'fragment',
   ],
+};
+
+export const createMainDecisionValidator = () => {
+  const ajv = new Ajv();
+  return ajv.compile<MainDecision>(decisionSchema);
 };
