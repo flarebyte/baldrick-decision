@@ -96,6 +96,13 @@ export const decisionSchema: JSONSchemaType<MainDecision> = {
           items: templateSchema,
         },
       },
+      required: [
+        'title',
+        'description',
+        'questions',
+        'parameters',
+        'templates',
+      ],
     },
   },
   required: [
