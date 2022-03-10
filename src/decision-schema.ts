@@ -6,20 +6,37 @@ type Question = MainDecision['questions'][number];
 type Parameter = MainDecision['parameters'][number];
 type Template = MainDecision['templates'][number];
 
+const titleMaxLength = 40;
+const descriptionMaxLength = 120;
+const tagsMaxLength = 200;
+const triggerMaxLength = 200;
+const templateMaxLength = 1000;
+
 const questionSchema: JSONSchemaType<Question> = {
+  description: 'A question that will be presented as a selection',
   type: 'object',
   properties: {
     title: {
       type: 'string',
+      description: 'A short title for the question',
+      minLength: 1,
+      maxLength: titleMaxLength,
     },
     description: {
       type: 'string',
+      description: 'A description or hint for the question',
+      minLength: 1,
+      maxLength: descriptionMaxLength,
     },
     tags: {
       type: 'string',
+      description: 'A list of tags separated by spaces',
+      maxLength: tagsMaxLength,
     },
     trigger: {
       type: 'string',
+      description: 'A list of tags expected to be present',
+      maxLength: triggerMaxLength,
     },
   },
   required: ['title', 'description', 'tags', 'trigger'],
@@ -30,12 +47,20 @@ const parameterSchema: JSONSchemaType<Parameter> = {
   properties: {
     trigger: {
       type: 'string',
+      description: 'A list of tags expected to be present',
+      maxLength: triggerMaxLength,
     },
     name: {
       type: 'string',
+      description: 'A short unique name for the parameter',
+      minLength: 1,
+      maxLength: titleMaxLength,
     },
     description: {
       type: 'string',
+      description: 'A description or hint for the parameter',
+      minLength: 1,
+      maxLength: descriptionMaxLength,
     },
   },
   required: ['trigger', 'name', 'description'],
@@ -46,9 +71,13 @@ const templateSchema: JSONSchemaType<Template> = {
   properties: {
     trigger: {
       type: 'string',
+      description: 'A list of tags expected to be present',
+      maxLength: triggerMaxLength,
     },
     value: {
       type: 'string',
+      description: 'A template using the mustache syntax',
+      maxLength: templateMaxLength,
     },
   },
   required: ['trigger', 'value'],
@@ -56,45 +85,70 @@ const templateSchema: JSONSchemaType<Template> = {
 
 export const decisionSchema: JSONSchemaType<MainDecision> = {
   type: 'object',
+  $id: 'https://github.com/flarebyte/baldrick-decision/baldrick-decision.schema.json',
+  title: 'Schema for providing an interactive checklist to make decision',
   properties: {
     title: {
       type: 'string',
+      description: 'A short title for the main decision',
+      minLength: 1,
+      maxLength: titleMaxLength,
     },
     description: {
       type: 'string',
+      description: 'A description or hint for the main decision',
+      minLength: 1,
+      maxLength: descriptionMaxLength,
     },
     questions: {
       type: 'array',
+      description: 'A list of questions that will be presented as a selection',
       items: questionSchema,
+      minItems: 1,
     },
     parameters: {
       type: 'array',
+      description: 'A list of parameters that will need to be populated',
       items: parameterSchema,
     },
     templates: {
       type: 'array',
       items: templateSchema,
+      description: 'A list of templates in order of preference',
+      minItems: 1,
     },
     fragment: {
       type: 'object',
       properties: {
         title: {
           type: 'string',
+          description: 'A short title for the fragment',
+          minLength: 1,
+          maxLength: titleMaxLength,
         },
         description: {
           type: 'string',
+          description: 'A description or hint for the fragment',
+          minLength: 1,
+          maxLength: descriptionMaxLength,
         },
         questions: {
           type: 'array',
+          description:
+            'A list of questions that will be presented as a selection',
           items: questionSchema,
+          minItems: 1,
         },
         parameters: {
           type: 'array',
+          description: 'A list of parameters that will need to be populated',
           items: parameterSchema,
         },
         templates: {
           type: 'array',
+          description: 'A list of templates in order of preference',
           items: templateSchema,
+          minItems: 1,
         },
       },
       required: [
@@ -115,6 +169,8 @@ export const decisionSchema: JSONSchemaType<MainDecision> = {
     'fragment',
   ],
 };
+
+console.log(JSON.stringify(decisionSchema, null, 2));
 
 export const createMainDecisionValidator = () => {
   const ajv = new Ajv();
