@@ -41,25 +41,6 @@ export const exampleDecision: MainDecision = {
         description: 'Name of the class',
       },
     ],
-    templates: [
-      {
-        trigger: 'interface extends has/class',
-        value: [
-          'class {{class_name}} interface {{name}} extends {{base_interface}}',
-          '{{fragments}}',
-          'end of class',
-        ].join('\n'),
-      },
-  
-      {
-        trigger: 'interface extends',
-        value: 'interface {{name}} extends {{base_interface}}',
-      },
-      {
-        trigger: 'interface',
-        value: 'interface {{name}}',
-      },
-    ],
     fragment: {
       title: 'field',
       description: 'Description of a field',
@@ -107,25 +88,12 @@ export const exampleDecision: MainDecision = {
           description: 'Name of the advanced type',
         },
       ],
-      templates: [
-        {
-          trigger: 'field type/string',
-          value: '{{name}}: string',
-        },
-        {
-          trigger: 'field type/boolean',
-          value: '{{name}}: boolean',
-        },
-        {
-          trigger: 'field type/advanced',
-          value: '{{name}}: {{advanced_type}}',
-        },
-        {
-          trigger: 'field',
-          value: '{{name}}',
-        },
-      ],
     },
+    template:  [
+      'class {{class_name}} interface {{name}} extends {{base_interface}}',
+      '{{fragments}}',
+      'end of class',
+    ].join('\n'),
   };
 
   export const exampleDecisionAsYaml = YAML.stringify(exampleDecision)

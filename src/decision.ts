@@ -55,8 +55,8 @@ export class DecisionManager {
   constructor(mainDecision: MainDecision) {
     this.mainDecision = mainDecision;
     this._overallDecision = {
-      mainParameters = [],
-      fragmentParameters = [],
+      mainParameters: [],
+      fragmentParameters: [],
       template: mainDecision.template,
     };
   }

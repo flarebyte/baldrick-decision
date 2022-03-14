@@ -82,48 +82,6 @@ describe('DecisionManager', () => {
       ]
     `);
   });
-  it('should the most suitable template', () => {
-    const decisionManager = new DecisionManager(exampleDecision);
-    decisionManager.getRootMainQuestions();
-    decisionManager.pushMainAutoAnswerTags();
-    decisionManager.pushAnswerTags('extends has/?');
-    decisionManager.getFollowUpMainQuestions();
-    decisionManager.pushAnswerTags('has/class');
-    decisionManager.getFollowUpMainQuestions();
-    expect(decisionManager.getMainTemplate()).toMatchInlineSnapshot(`
-      Object {
-        "trigger": "interface extends has/class",
-        "value": "class {{class_name}} interface {{name}} extends {{base_interface}}
-      {{fragments}}
-      end of class",
-      }
-    `);
-  });
-  it('should the most fallback template', () => {
-    const decisionManager = new DecisionManager(exampleDecision);
-    decisionManager.getRootMainQuestions();
-    decisionManager.pushMainAutoAnswerTags();
-    decisionManager.getFollowUpMainQuestions();
-    decisionManager.getFollowUpMainQuestions();
-    expect(decisionManager.getMainTemplate()).toMatchInlineSnapshot(`
-      Object {
-        "trigger": "interface",
-        "value": "interface {{name}}",
-      }
-    `);
-    decisionManager.setMainDecisionTaken([{ name: 'name', value: 'Commands' }]);
-    expect(decisionManager.getMainDecisionTaken()).toMatchInlineSnapshot(`
-      Object {
-        "parameters": Array [
-          Object {
-            "name": "name",
-            "value": "Commands",
-          },
-        ],
-        "template": "interface {{name}}",
-      }
-    `);
-  });
   it('should ask for fragment as well', () => {
     const decisionManager = new DecisionManager(exampleDecision);
     decisionManager.getRootMainQuestions();
@@ -154,28 +112,32 @@ describe('DecisionManager', () => {
       { name: 'name', value: 'title' },
     ]);
 
-    expect(decisionManager.getFragmentDecisionTakenList())
-      .toMatchInlineSnapshot(`
-      Array [
-        Object {
-          "parameters": Array [
+    expect(decisionManager.overallDecision).toMatchInlineSnapshot(`
+      Object {
+        "fragmentParameters": Array [
+          Array [
             Object {
               "name": "name",
               "value": "description",
             },
           ],
-          "template": "{{name}}",
-        },
-        Object {
-          "parameters": Array [
+          Array [
             Object {
               "name": "name",
               "value": "title",
             },
           ],
-          "template": "{{name}}: string",
-        },
-      ]
+        ],
+        "mainParameters": Array [
+          Object {
+            "name": "name",
+            "value": "Commands",
+          },
+        ],
+        "template": "class {{class_name}} interface {{name}} extends {{base_interface}}
+      {{fragments}}
+      end of class",
+      }
     `);
   });
 });
