@@ -24,46 +24,41 @@ interface Parameter {
   description: string;
 }
 
-interface Template {
-  trigger: string;
-  value: string;
-}
-
 interface DecisionRoute {
   title: string;
   description: string;
   questions: Question[];
   parameters: Parameter[];
-  templates: Template[];
 }
 
 interface ParameterValue {
   name: string;
-  value: string;
+  value: string | boolean;
 }
-interface DecisionTaken {
-  parameters: ParameterValue[];
+
+interface OverallDecision {
+  mainParameters: ParameterValue[];
+  fragmentParameters: ParameterValue[][];
   template: string;
 }
 
-const noDecisionTaken: DecisionTaken = {
-  parameters: [],
-  template: '',
-};
-
 export interface MainDecision extends DecisionRoute {
   fragment: DecisionRoute;
+  template: string;
 }
 
-
 export class DecisionManager {
-  mainDecision: MainDecision;
-  tagManager = new TagManager();
-  mainDecisionTaken: DecisionTaken = noDecisionTaken;
-  fragmentDecisionTakenList: DecisionTaken[] = [];
+  private mainDecision: MainDecision;
+  private tagManager = new TagManager();
+  private _overallDecision: OverallDecision;
 
   constructor(mainDecision: MainDecision) {
     this.mainDecision = mainDecision;
+    this._overallDecision = {
+      mainParameters = [],
+      fragmentParameters = [],
+      template: mainDecision.template,
+    };
   }
 
   #resetTagManager() {
@@ -160,41 +155,18 @@ export class DecisionManager {
   getFragmentParameters(): PromptText[] {
     return this.#getScopeParameters(this.mainDecision.fragment);
   }
-  #getScopeTemplate(decisionRoute: DecisionRoute): Template | false {
-    const templates = decisionRoute.templates.filter((parameter) =>
-      this.tagManager.matchTrigger(parameter.trigger)
-    );
-    const template = templates[0];
-    return template ? template : false;
-  }
-  getMainTemplate(): Template | false {
-    return this.#getScopeTemplate(this.mainDecision);
-  }
-  getFragmentTemplate(): Template | false {
-    return this.#getScopeTemplate(this.mainDecision.fragment);
-  }
+
   setMainDecisionTaken(parameters: ParameterValue[]) {
-    const mainTemplate = this.getMainTemplate();
-    const template = mainTemplate ? mainTemplate.value : 'no-template-found';
-    const decisionTaken: DecisionTaken = { parameters, template };
-    this.mainDecisionTaken = decisionTaken;
+    this._overallDecision.mainParameters = parameters;
     this.#resetTagManager();
-  }
-  getMainDecisionTaken(): DecisionTaken {
-    return this.mainDecisionTaken;
   }
 
   addFragmentDecisionTaken(parameters: ParameterValue[]) {
-    const fragmentTemplate = this.getFragmentTemplate();
-    const template = fragmentTemplate
-      ? fragmentTemplate.value
-      : 'no-template-found';
-    const decisionTaken: DecisionTaken = { parameters, template };
-    this.fragmentDecisionTakenList.push(decisionTaken);
+    this._overallDecision.fragmentParameters.push(parameters);
     this.#resetTagManager();
   }
 
-  getFragmentDecisionTakenList(): DecisionTaken[] {
-    return this.fragmentDecisionTakenList;
+  get overallDecision() {
+    return this._overallDecision;
   }
 }

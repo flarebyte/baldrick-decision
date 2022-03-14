@@ -4,7 +4,6 @@ import { MainDecision } from './decision';
 
 type Question = MainDecision['questions'][number];
 type Parameter = MainDecision['parameters'][number];
-type Template = MainDecision['templates'][number];
 
 const titleMaxLength = 40;
 const descriptionMaxLength = 120;
@@ -66,23 +65,6 @@ const parameterSchema: JSONSchemaType<Parameter> = {
   required: ['trigger', 'name', 'description'],
 };
 
-const templateSchema: JSONSchemaType<Template> = {
-  type: 'object',
-  properties: {
-    trigger: {
-      type: 'string',
-      description: 'A list of tags expected to be present',
-      maxLength: triggerMaxLength,
-    },
-    value: {
-      type: 'string',
-      description: 'A template using the mustache syntax',
-      maxLength: templateMaxLength,
-    },
-  },
-  required: ['trigger', 'value'],
-};
-
 export const decisionSchema: JSONSchemaType<MainDecision> = {
   type: 'object',
   $id: 'https://github.com/flarebyte/baldrick-decision/baldrick-decision.schema.json',
@@ -111,11 +93,11 @@ export const decisionSchema: JSONSchemaType<MainDecision> = {
       description: 'A list of parameters that will need to be populated',
       items: parameterSchema,
     },
-    templates: {
-      type: 'array',
-      items: templateSchema,
-      description: 'A list of templates in order of preference',
-      minItems: 1,
+    template: {
+      type: 'string',
+      description: 'A template using the mustache syntax',
+      minLength: 1,
+      maxLength: templateMaxLength,
     },
     fragment: {
       type: 'object',
@@ -144,20 +126,8 @@ export const decisionSchema: JSONSchemaType<MainDecision> = {
           description: 'A list of parameters that will need to be populated',
           items: parameterSchema,
         },
-        templates: {
-          type: 'array',
-          description: 'A list of templates in order of preference',
-          items: templateSchema,
-          minItems: 1,
-        },
       },
-      required: [
-        'title',
-        'description',
-        'questions',
-        'parameters',
-        'templates',
-      ],
+      required: ['title', 'description', 'questions', 'parameters'],
     },
   },
   required: [
@@ -165,7 +135,7 @@ export const decisionSchema: JSONSchemaType<MainDecision> = {
     'description',
     'questions',
     'parameters',
-    'templates',
+    'template',
     'fragment',
   ],
 };
