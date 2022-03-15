@@ -36,7 +36,7 @@ interface ParameterValue {
   value: string | boolean;
 }
 
-interface OverallDecision {
+export interface OverallDecision {
   mainParameters: ParameterValue[];
   fragmentParameters: ParameterValue[][];
   template: string;
