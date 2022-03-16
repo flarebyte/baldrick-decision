@@ -1,4 +1,5 @@
 import YAML from 'yaml';
+import * as jetpack from 'fs-jetpack';
 import { MainDecision } from './decision';
 import { createMainDecisionValidator } from './decision-schema';
 
@@ -25,8 +26,25 @@ export class DecisionStore {
       } else {
         this.messages.push(`Invalid schema for YAML file: ${filename}`);
       }
-    } catch (exception) {
+    } catch {
       this.messages.push(`Could not parse YAML file: ${filename}`);
+    }
+  }
+
+  async loadFromDirectory(rootDir: string) {
+    const filenames = jetpack.find(rootDir, { matching: '*.decision.yaml' });
+    const readPromises = filenames.map((filename) =>
+      jetpack.readAsync(filename)
+    );
+    const contents = await Promise.all(readPromises);
+
+    for (const [idx, filename] of filenames.entries()) {
+      const content = contents[idx];
+      if (content) {
+        this.loadFromString(filename, content);
+      } else {
+        throw new Error(`The file ${filename} cannot be read!`);
+      }
     }
   }
 

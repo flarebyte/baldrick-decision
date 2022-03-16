@@ -1,4 +1,4 @@
-import { render } from 'mustache';
+import Mustache from 'mustache';
 import { OverallDecision } from './decision';
 
 type KeyValueObj = { [key: string]: string | boolean };
@@ -21,5 +21,15 @@ const toHydrateParameters = (
   return { main, fragments };
 };
 
+/**
+ *  Custom global config for Mustache
+ */
+Mustache.escape = function (text) {
+  return text;
+};
+
 export const hydrate = (overallDecision: OverallDecision): string =>
-  render(overallDecision.template, toHydrateParameters(overallDecision));
+  Mustache.render(
+    overallDecision.template,
+    toHydrateParameters(overallDecision)
+  );

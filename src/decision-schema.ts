@@ -1,5 +1,4 @@
-import Ajv from 'ajv';
-import { JSONSchemaType } from 'ajv';
+import Ajv, { JSONSchemaType } from 'ajv';
 import { MainDecision } from './decision';
 
 type Question = MainDecision['questions'][number];
@@ -140,7 +139,7 @@ export const decisionSchema: JSONSchemaType<MainDecision> = {
   ],
 };
 
-console.log(JSON.stringify(decisionSchema, null, 2));
+// console.log(JSON.stringify(decisionSchema, null, 2));
 
 export const createMainDecisionValidator = () => {
   const ajv = new Ajv();
