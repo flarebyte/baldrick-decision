@@ -1,15 +1,5 @@
+import { PromptChoice, PromptText } from './model';
 import { TagManager } from './tag';
-
-interface PromptChoice {
-  title: string;
-  description: string;
-  value: string;
-}
-
-interface PromptText {
-  name: string;
-  message: string;
-}
 
 interface Question {
   title: string;
@@ -31,7 +21,7 @@ interface DecisionRoute {
   parameters: Parameter[];
 }
 
-interface ParameterValue {
+export interface ParameterValue {
   name: string;
   value: string | boolean;
 }

@@ -1,22 +1,41 @@
 import prompts from 'prompts';
-import path from 'node:path';
+import { PromptChoice, PromptText } from './model';
 
-const customFileSuggest = (input: string, choices: prompts.Choice[]) =>
-  Promise.resolve(
-    choices.filter((i) => i.title.toLowerCase().includes(input.toLowerCase()))
-  );
-
-export const promptFilename = async (filenames: string[]): Promise<string> => {
-  const currentDir = process.cwd();
+export const promptDecisionFile = async (
+  choices: PromptChoice[]
+): Promise<string> => {
   const response = await prompts({
-    type: 'autocomplete',
+    type: 'select',
     name: 'value',
-    message: 'Select the destination file',
-    suggest: customFileSuggest,
-    choices: filenames.map((s) => ({
-      title: path.relative(currentDir, s),
-      value: s,
-    })),
+    message: 'Select the decision file',
+    choices,
+  });
+
+  return response.value;
+};
+
+export const promptQuestions = async (
+  choices: PromptChoice[]
+): Promise<string[]> => {
+  const response = await prompts({
+    type: 'multiselect',
+    name: 'value',
+    message: 'Pick the suitable answers',
+    choices,
+    hint: '- Space to select. Return to submit'
+  });
+
+  return response.value;
+};
+
+export const promptParameter = async (
+  promptText: PromptText
+): Promise<string> => {
+  const response = await prompts({
+    type: 'text',
+    name: 'value',
+    message: promptText.message,
+    
   });
 
   return response.value;

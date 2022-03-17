@@ -1,5 +1,11 @@
 import { Command } from 'commander';
 import { DecisionStore } from './decision-store.js';
+import { DecisionManager, ParameterValue } from './decision.js';
+import {
+  promptDecisionFile,
+  promptParameter,
+  promptQuestions,
+} from './prompting.js';
 import { version } from './version.js';
 
 const program = new Command();
@@ -17,11 +23,37 @@ export async function runClient() {
     program.parse();
     const rootDir = program.args[0] || './temp/';
     const decisionStore = new DecisionStore();
-    decisionStore.loadFromDirectory(rootDir);
+    await decisionStore.loadFromDirectory(rootDir);
+    const decisionTitle = await promptDecisionFile(decisionStore.getChoices());
+    const mainDecision = decisionStore.getByTitle(decisionTitle);
+    if (!mainDecision) {
+      throw new Error(
+        'Somehow something went wrong and we could not find the decision by title'
+      );
+    }
+    const decisionManager = new DecisionManager(mainDecision);
+    let mainQuestionsChoices = decisionManager.getRootMainQuestions();
+    let maxIterations = 30;
+    decisionManager.pushMainAutoAnswerTags();
+    // Ask main questions
+    console.log('Questions');
+    while (mainQuestionsChoices.length > 1 && maxIterations > 0) {
+      maxIterations--;
+      const answers = await promptQuestions(mainQuestionsChoices);
+      decisionManager.pushAnswerTags(answers.join(' '));
+      mainQuestionsChoices = decisionManager.getFollowUpMainQuestions();
+    }
 
-    console.log('-'.repeat(30));
-    console.log('todo');
-    console.log('-'.repeat(30));
+    const mainParameters = decisionManager.getMainParameters();
+    const mainParameterValues: ParameterValue[] = [];
+    for (const parameter of mainParameters) {
+      const parameterValue = await promptParameter(parameter);
+      mainParameterValues.push({ name: parameter.name, value: parameterValue });
+      console.log(parameter.name, parameterValue);
+    }
+    decisionManager.setMainDecisionTaken(mainParameterValues);
+    console.log(decisionManager.overallDecision);
+
     console.log(`✓ Done. Version ${version}`);
   } catch (error) {
     console.log('baldrick-decision will exit with error code 1');

@@ -2,12 +2,7 @@ import YAML from 'yaml';
 import * as jetpack from 'fs-jetpack';
 import { MainDecision } from './decision';
 import { createMainDecisionValidator } from './decision-schema';
-
-interface PromptChoice {
-  title: string;
-  description: string;
-  value: string;
-}
+import { PromptChoice } from './model';
 
 export class DecisionStore {
   decisions: MainDecision[] = [];
