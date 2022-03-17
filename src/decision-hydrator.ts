@@ -1,5 +1,5 @@
 import Mustache from 'mustache';
-import { OverallDecision } from './decision';
+import { OverallDecision } from './decision.js';
 
 type KeyValueObj = { [key: string]: string | boolean };
 

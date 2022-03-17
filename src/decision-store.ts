@@ -1,8 +1,8 @@
 import YAML from 'yaml';
 import * as jetpack from 'fs-jetpack';
-import { MainDecision } from './decision';
-import { createMainDecisionValidator } from './decision-schema';
-import { PromptChoice } from './model';
+import { MainDecision } from './decision.js';
+import { createMainDecisionValidator } from './decision-schema.js';
+import { PromptChoice } from './model.js';
 
 export class DecisionStore {
   decisions: MainDecision[] = [];
@@ -27,6 +27,7 @@ export class DecisionStore {
   }
 
   async loadFromDirectory(rootDir: string) {
+    // eslint-disable-next-line  unicorn/no-array-method-this-argument
     const filenames = jetpack.find(rootDir, { matching: '*.decision.yaml' });
     const readPromises = filenames.map((filename) =>
       jetpack.readAsync(filename)

@@ -1,5 +1,5 @@
-import { PromptChoice, PromptText } from './model';
-import { TagManager } from './tag';
+import { PromptChoice, PromptText } from './model.js';
+import { TagManager } from './tag.js';
 
 interface Question {
   title: string;
@@ -99,7 +99,7 @@ export class DecisionManager {
     let choices: PromptChoice[] = [];
     for (const tag of openTags) {
       const questions = this.#getScopeQuestionsByTag(decisionRoute, tag);
-      choices = choices.concat(questions);
+      choices = [...choices, ...questions];
       this.tagManager.deleteOpen(tag);
     }
     return choices;

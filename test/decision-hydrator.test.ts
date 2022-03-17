@@ -40,6 +40,7 @@ const example: OverallDecision = {
 describe('decision-hydrator', () => {
   it('should hydrate a template', () => {
     const actual = hydrate(example);
+    // eslint-disable-next-line unicorn/template-indent
     expect(actual).toMatchInlineSnapshot(`
       "
         Project: project-name

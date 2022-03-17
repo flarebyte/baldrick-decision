@@ -33,7 +33,7 @@ export class TagManager {
   }
   matchTrigger(trigger: string): boolean {
     const triggerParts = trigger.split(' ');
-    const hasTag = (tag: string) => this.tags.has(tag);
+    const hasTag = (tag: string) => this.tags.has(tag); // eslint-disable-line unicorn/consistent-function-scoping
     return triggerParts.every(hasTag);
   }
   all(): string[] {

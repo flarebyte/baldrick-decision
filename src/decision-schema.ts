@@ -1,5 +1,5 @@
 import Ajv, { JSONSchemaType } from 'ajv';
-import { MainDecision } from './decision';
+import { MainDecision } from './decision.js';
 
 type Question = MainDecision['questions'][number];
 type Parameter = MainDecision['parameters'][number];
