@@ -1,5 +1,5 @@
 import YAML from 'yaml';
-import * as jetpack from 'fs-jetpack';
+import jetpack from 'fs-jetpack';
 import { MainDecision } from './decision.js';
 import { createMainDecisionValidator } from './decision-schema.js';
 import { PromptChoice } from './model.js';
