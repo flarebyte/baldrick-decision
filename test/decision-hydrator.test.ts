@@ -45,15 +45,15 @@ describe('decision-hydrator', () => {
         Project: project-name
         Homepage: http//homepage.com
          cutting-edge 
-  
+        
         Fragments:
-  
+        
           ||name||year|| open||
 
           |green|2022|yes|
           |orange|2020||
           |red|||
-  
+        
         License: MIT
         "
     `);
