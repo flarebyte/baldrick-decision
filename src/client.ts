@@ -2,6 +2,7 @@ import { Command } from 'commander';
 import { DecisionStore } from './decision-store.js';
 import { DecisionManager, ParameterValue } from './decision.js';
 import {
+  promptAnotherFragmentQuestion,
   promptDecisionFile,
   promptParameter,
   promptQuestions,
@@ -14,6 +15,51 @@ program
   .description('CLI to make cunning decisions')
   .version(version)
   .argument('<dir>', 'directory containing the decision files');
+
+const askMainQuestions = async (decisionManager: DecisionManager) => {
+  let mainQuestionsChoices = decisionManager.getRootMainQuestions();
+  let maxIterations = 30;
+  decisionManager.pushMainAutoAnswerTags();
+  console.log('Questions');
+  while (mainQuestionsChoices.length > 1 && maxIterations > 0) {
+    maxIterations--;
+    const answers = await promptQuestions(mainQuestionsChoices);
+    decisionManager.pushAnswerTags(answers.join(' '));
+    mainQuestionsChoices = decisionManager.getFollowUpMainQuestions();
+  }
+
+  const mainParameters = decisionManager.getMainParameters();
+  const mainParameterValues: ParameterValue[] = [];
+  for (const parameter of mainParameters) {
+    const parameterValue = await promptParameter(parameter);
+    mainParameterValues.push({ name: parameter.name, value: parameterValue });
+  }
+  decisionManager.setMainDecisionTaken(mainParameterValues);
+};
+
+const askFragmentQuestions = async (decisionManager: DecisionManager) => {
+  let fragmentQuestionsChoices = decisionManager.getRootFragmentQuestions();
+  let maxIterations = 30;
+  decisionManager.pushFragmentAutoAnswerTags();
+  console.log('Questions about fragment');
+  while (fragmentQuestionsChoices.length > 1 && maxIterations > 0) {
+    maxIterations--;
+    const answers = await promptQuestions(fragmentQuestionsChoices);
+    decisionManager.pushAnswerTags(answers.join(' '));
+    fragmentQuestionsChoices = decisionManager.getFollowUpFragmentQuestions();
+  }
+
+  const fragmentParameters = decisionManager.getFragmentParameters();
+  const fragmentParameterValues: ParameterValue[] = [];
+  for (const parameter of fragmentParameters) {
+    const parameterValue = await promptParameter(parameter);
+    fragmentParameterValues.push({
+      name: parameter.name,
+      value: parameterValue,
+    });
+  }
+  decisionManager.addFragmentDecisionTaken(fragmentParameterValues);
+};
 
 /**
  * This function may be merged in the future when the linter does a better job at recognizing .mts files
@@ -32,27 +78,14 @@ export async function runClient() {
       );
     }
     const decisionManager = new DecisionManager(mainDecision);
-    let mainQuestionsChoices = decisionManager.getRootMainQuestions();
-    let maxIterations = 30;
-    decisionManager.pushMainAutoAnswerTags();
-    // Ask main questions
-    console.log('Questions');
-    while (mainQuestionsChoices.length > 1 && maxIterations > 0) {
-      maxIterations--;
-      const answers = await promptQuestions(mainQuestionsChoices);
-      decisionManager.pushAnswerTags(answers.join(' '));
-      mainQuestionsChoices = decisionManager.getFollowUpMainQuestions();
+    await askMainQuestions(decisionManager);
+    let moreFragment = await promptAnotherFragmentQuestion();
+    while (moreFragment) {
+      await askFragmentQuestions(decisionManager);
+      moreFragment = await promptAnotherFragmentQuestion();
     }
 
-    const mainParameters = decisionManager.getMainParameters();
-    const mainParameterValues: ParameterValue[] = [];
-    for (const parameter of mainParameters) {
-      const parameterValue = await promptParameter(parameter);
-      mainParameterValues.push({ name: parameter.name, value: parameterValue });
-      console.log(parameter.name, parameterValue);
-    }
-    decisionManager.setMainDecisionTaken(mainParameterValues);
-    console.log(decisionManager.overallDecision);
+    console.log(JSON.stringify(decisionManager.overallDecision, null, 2));
 
     console.log(`✓ Done. Version ${version}`);
   } catch (error) {

@@ -147,12 +147,21 @@ export class DecisionManager {
   }
 
   setMainDecisionTaken(parameters: ParameterValue[]) {
-    this._overallDecision.mainParameters = parameters;
+    const tagParameters: ParameterValue[] = this.tagManager
+      .all()
+      .map((name) => ({ name, value: true }));
+    this._overallDecision.mainParameters = [...tagParameters, ...parameters];
     this.#resetTagManager();
   }
 
   addFragmentDecisionTaken(parameters: ParameterValue[]) {
-    this._overallDecision.fragmentParameters.push(parameters);
+    const tagParameters: ParameterValue[] = this.tagManager
+      .all()
+      .map((name) => ({ name, value: true }));
+    this._overallDecision.fragmentParameters.push([
+      ...tagParameters,
+      ...parameters,
+    ]);
     this.#resetTagManager();
   }
 

@@ -117,11 +117,23 @@ describe('DecisionManager', () => {
         "fragmentParameters": Array [
           Array [
             Object {
+              "name": "field",
+              "value": true,
+            },
+            Object {
               "name": "name",
               "value": "description",
             },
           ],
           Array [
+            Object {
+              "name": "field",
+              "value": true,
+            },
+            Object {
+              "name": "type/string",
+              "value": true,
+            },
             Object {
               "name": "name",
               "value": "title",
@@ -129,6 +141,10 @@ describe('DecisionManager', () => {
           ],
         ],
         "mainParameters": Array [
+          Object {
+            "name": "interface",
+            "value": true,
+          },
           Object {
             "name": "name",
             "value": "Commands",

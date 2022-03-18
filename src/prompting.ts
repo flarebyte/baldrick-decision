@@ -39,3 +39,15 @@ export const promptParameter = async (
 
   return response.value;
 };
+
+export const promptAnotherFragmentQuestion = async (
+): Promise<boolean> => {
+  const response = await prompts({
+    type: 'confirm',
+    name: 'value',
+    message: 'Is there another fragment ?',
+    initial: false
+  });
+
+  return response.value;
+};
