@@ -64,6 +64,9 @@ const parameterSchema: JSONSchemaType<Parameter> = {
   required: ['trigger', 'name', 'description'],
 };
 
+/**
+ * The JSON schema (Ajv format) for creating decisions documents
+ */
 export const decisionSchema: JSONSchemaType<MainDecision> = {
   type: 'object',
   $id: 'https://github.com/flarebyte/baldrick-decision/baldrick-decision.schema.json',
@@ -139,8 +142,10 @@ export const decisionSchema: JSONSchemaType<MainDecision> = {
   ],
 };
 
-// console.log(JSON.stringify(decisionSchema, null, 2));
-
+/**
+ * Factory for a validator for the decision schema
+ * @returns an AJV validator
+ */
 export const createMainDecisionValidator = () => {
   const ajv = new Ajv();
   return ajv.compile<MainDecision>(decisionSchema);

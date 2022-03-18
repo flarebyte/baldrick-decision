@@ -8,7 +8,13 @@ status](https://github.com/flarebyte/baldrick-decision/actions/workflows/main.ym
 ![node-current](https://img.shields.io/node/v/baldrick-decision)
 ![NPM](https://img.shields.io/npm/l/baldrick-decision)
 
->
+> A CLI application that helps you to make decisions with a cunning plan
+
+```bash
+
+baldrick-decision path/to/decisions
+
+```
 
 ## Documentation and links
 

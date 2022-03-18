@@ -28,6 +28,11 @@ Mustache.escape = function (text) {
   return text;
 };
 
+/**
+ * Hydrate the data provided by the user and apply the mustache template
+ * @param overallDecision the overall decision choices and inputs by the user
+ * @returns a snippet of text
+ */
 export const hydrate = (overallDecision: OverallDecision): string =>
   Mustache.render(
     overallDecision.template,
