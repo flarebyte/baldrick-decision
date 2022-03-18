@@ -1,10 +1,13 @@
 {
   "name": "baldrick-decision",
   "description": "A CLI application that helps you to make decisions with a cunning plan",
-  "keywords": ["CLI"],
-  "version": "0.1.0",
+  "keywords": [
+    "CLI",
+    "decision"
+  ],
+  "version": "0.4.0",
   "author": {
-    "name": "OLivier Huin",
+    "name": "Olivier Huin",
     "url": "https://github.com/olih"
   },
   "license": "MIT",
@@ -58,7 +61,19 @@
     "norm": "npx baldrick-ts generate -f cli -ga 'flarebyte' -ch 'Flarebyte.com' -cy 2022 -l MIT && yarn md:fix",
     "norm:g": "baldrick-ts generate -f cli -ga 'flarebyte' -ch 'Flarebyte.com' -cy 2022 -l MIT && yarn md:fix"
   },
-  "dependencies": {},
-  "devDependencies": {},
+  "dependencies": {
+    "ajv": "^8.10.0",
+    "commander": "9.1.0",
+    "fs-jetpack": "^4.3.1",
+    "mustache": "^4.2.0",
+    "prompts": "^2.4.2",
+    "yaml": "^1.10.2"
+  },
+  "devDependencies": {
+    "@types/mustache": "^4.1.2",
+    "@types/prompts": "^2.0.14",
+    "baldrick-dev-ts": "^0.15.0",
+    "typescript": "^4.6.2"
+  },
   "peerDependencies": {}
 }
