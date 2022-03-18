@@ -1,4 +1,5 @@
 import { Command } from 'commander';
+import { hydrate } from './decision-hydrator.js';
 import { DecisionStore } from './decision-store.js';
 import { DecisionManager, ParameterValue } from './decision.js';
 import {
@@ -20,7 +21,7 @@ const askMainQuestions = async (decisionManager: DecisionManager) => {
   let mainQuestionsChoices = decisionManager.getRootMainQuestions();
   let maxIterations = 30;
   decisionManager.pushMainAutoAnswerTags();
-  console.log('Questions');
+  console.log('--- Questions ---');
   while (mainQuestionsChoices.length > 1 && maxIterations > 0) {
     maxIterations--;
     const answers = await promptQuestions(mainQuestionsChoices);
@@ -41,7 +42,7 @@ const askFragmentQuestions = async (decisionManager: DecisionManager) => {
   let fragmentQuestionsChoices = decisionManager.getRootFragmentQuestions();
   let maxIterations = 30;
   decisionManager.pushFragmentAutoAnswerTags();
-  console.log('Questions about fragment');
+  console.log('--- Questions about fragment ---');
   while (fragmentQuestionsChoices.length > 1 && maxIterations > 0) {
     maxIterations--;
     const answers = await promptQuestions(fragmentQuestionsChoices);
@@ -85,7 +86,8 @@ export async function runClient() {
       moreFragment = await promptAnotherFragmentQuestion();
     }
 
-    console.log(JSON.stringify(decisionManager.overallDecision, null, 2));
+    const content = hydrate(decisionManager.overallDecision);
+    console.log(content);
 
     console.log(`✓ Done. Version ${version}`);
   } catch (error) {
