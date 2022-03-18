@@ -19,6 +19,7 @@ class `decision-hydrator.ts`{
   +hydrate()
 }
 class `decision-schema.ts`{
+  +writeJsonSchema()
   +createMainDecisionValidator()
 }
 class `decision-store.ts`
@@ -36,6 +37,9 @@ class `tag.ts`{
   - toOpen()
 }
 class `version.ts`
+class `node:path`{
+  +path()
+}
 class `commander`{
   +Command()
 }
@@ -60,20 +64,21 @@ class `./prompting.js`{
 class `./version.js`{
   +version()
 }
+class `./decision-schema.js`{
+  +createMainDecisionValidator()
+  +writeJsonSchema()
+}
 class `mustache`{
   +Mustache()
 }
 class `ajv`{
   +Ajv()
 }
-class `yaml`{
-  +YAML()
-}
 class `fs-jetpack`{
   +jetpack()
 }
-class `./decision-schema.js`{
-  +createMainDecisionValidator()
+class `yaml`{
+  +YAML()
 }
 class `./model.js`{
   +PromptText()
@@ -85,15 +90,18 @@ class `./tag.js`{
 class `prompts`{
   +prompts()
 }
+`client.ts`-->`node:path`
 `client.ts`-->`commander`
 `client.ts`-->`./decision-hydrator.js`
 `client.ts`-->`./decision-store.js`
 `client.ts`-->`./decision.js`
 `client.ts`-->`./prompting.js`
 `client.ts`-->`./version.js`
+`client.ts`-->`./decision-schema.js`
 `decision-hydrator.ts`-->`mustache`
 `decision-hydrator.ts`-->`./decision.js`
 `decision-schema.ts`-->`ajv`
+`decision-schema.ts`-->`fs-jetpack`
 `decision-schema.ts`-->`./decision.js`
 `decision-store.ts`-->`yaml`
 `decision-store.ts`-->`fs-jetpack`

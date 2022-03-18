@@ -1,15 +1,9 @@
-import { hydrate } from './decision-hydrator.js';
-import {
-  createMainDecisionValidator,
-  decisionSchema,
-} from './decision-schema.js';
-import { DecisionStore } from './decision-store.js';
-import { DecisionManager } from './decision.js';
-
+export { hydrate } from './decision-hydrator.js';
 export {
-  DecisionStore,
-  DecisionManager,
-  hydrate,
-  decisionSchema,
   createMainDecisionValidator,
-};
+  decisionSchema,
+  writeJsonSchema,
+} from './decision-schema.js';
+export { DecisionStore } from './decision-store.js';
+
+export { DecisionManager } from './decision.js';

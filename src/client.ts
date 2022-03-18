@@ -1,3 +1,4 @@
+import path from 'node:path';
 import { Command } from 'commander';
 import { hydrate } from './decision-hydrator.js';
 import { DecisionStore } from './decision-store.js';
@@ -9,13 +10,15 @@ import {
   promptQuestions,
 } from './prompting.js';
 import { version } from './version.js';
+import { writeJsonSchema } from './decision-schema.js';
 
 const program = new Command();
 program
   .name('baldrick-decision')
   .description('CLI to make cunning decisions')
   .version(version)
-  .argument('<dir>', 'directory containing the decision files');
+  .argument('<dir>', 'directory containing the decision files')
+  .option('--schema', 'write the decision JSON schema in the directory');
 
 const askMainQuestions = async (decisionManager: DecisionManager) => {
   let mainQuestionsChoices = decisionManager.getRootMainQuestions();
@@ -69,6 +72,15 @@ export async function runClient() {
   try {
     program.parse();
     const rootDir = program.args[0] || './temp/';
+    const shouldWriteSchema = !!program.opts()['schema'];
+    if (shouldWriteSchema) {
+      const jsonSchemaFilename = path.join(rootDir, 'decision.schema.json');
+      console.log(
+        `Writing the JSON Schema for decision:s ${jsonSchemaFilename}`
+      );
+      await writeJsonSchema(jsonSchemaFilename);
+      return;
+    }
     const decisionStore = new DecisionStore();
     await decisionStore.loadFromDirectory(rootDir);
     const decisionTitle = await promptDecisionFile(decisionStore.getChoices());

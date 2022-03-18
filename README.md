@@ -16,6 +16,14 @@ baldrick-decision path/to/decisions
 
 ```
 
+If you need to export the current JSON schema for decision YAML documents:
+
+```bash
+
+baldrick-decision path/to/decisions --schema
+
+```
+
 ## Documentation and links
 
 -   [Code Maintenance](MAINTENANCE.md)

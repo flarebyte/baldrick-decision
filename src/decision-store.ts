@@ -4,6 +4,9 @@ import { MainDecision } from './decision.js';
 import { createMainDecisionValidator } from './decision-schema.js';
 import { PromptChoice } from './model.js';
 
+/**
+ * A decision store will usually store all the decision files in a given repository
+ */
 export class DecisionStore {
   decisions: MainDecision[] = [];
   messages: string[] = [];
@@ -11,7 +14,11 @@ export class DecisionStore {
   #load(mainDecision: MainDecision) {
     this.decisions.push(mainDecision);
   }
-
+  /**
+   * Load the content of the decision file
+   * @param filename the filename for information purposes. No IO will be performed
+   * @param content the YAML content of the decision file as a string
+   */
   loadFromString(filename: string, content: string) {
     try {
       const unsafeDecision = YAML.parse(content);
@@ -26,6 +33,11 @@ export class DecisionStore {
     }
   }
 
+  /**
+   * Loads all the YAML decision files from a directory.
+   * Note: This does not recurse over sub-folders.
+   * @param rootDir the directory containing the decision files
+   */
   async loadFromDirectory(rootDir: string) {
     // eslint-disable-next-line  unicorn/no-array-method-this-argument
     const filenames = jetpack.find(rootDir, { matching: '*.decision.yaml' });
@@ -44,6 +56,9 @@ export class DecisionStore {
     }
   }
 
+  /**
+   * List of the possible decision files as an array of choices
+   */
   getChoices(): PromptChoice[] {
     return this.decisions.map((decision) => ({
       title: decision.title,
@@ -52,6 +67,10 @@ export class DecisionStore {
     }));
   }
 
+  /**
+   * Find a decision document by title
+   * @param title the title of the decision file
+   */
   getByTitle(title: string): MainDecision | false {
     return this.decisions.find((decision) => decision.title === title) || false;
   }

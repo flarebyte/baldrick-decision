@@ -3,6 +3,9 @@ import { OverallDecision } from './decision.js';
 
 type KeyValueObj = { [key: string]: string | boolean };
 
+/**
+ * Parameters that are used by the mustache template
+ */
 export interface HydrateParameters {
   main: KeyValueObj;
   fragments: KeyValueObj[];

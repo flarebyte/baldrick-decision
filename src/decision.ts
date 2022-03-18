@@ -37,6 +37,9 @@ export interface MainDecision extends DecisionRoute {
   template: string;
 }
 
+/**
+ * A decision manager keeps a record of the interaction with an user for a decision
+ */
 export class DecisionManager {
   private mainDecision: MainDecision;
   private tagManager = new TagManager();
@@ -75,20 +78,27 @@ export class DecisionManager {
     }));
     return choices;
   }
-  getMainQuestionsByTag(tag: string): PromptChoice[] {
+
+  #getMainQuestionsByTag(tag: string): PromptChoice[] {
     return this.#getScopeQuestionsByTag(this.mainDecision, tag);
   }
 
-  getFragmentQuestionsByTag(tag: string): PromptChoice[] {
+  #getFragmentQuestionsByTag(tag: string): PromptChoice[] {
     return this.#getScopeQuestionsByTag(this.mainDecision.fragment, tag);
   }
 
+  /**
+   * Get the initial questions for main
+   */
   getRootMainQuestions(): PromptChoice[] {
-    return this.getMainQuestionsByTag('');
+    return this.#getMainQuestionsByTag('');
   }
 
+  /**
+   * Get the initial questions for a fragment
+   */
   getRootFragmentQuestions(): PromptChoice[] {
-    return this.getFragmentQuestionsByTag('');
+    return this.#getFragmentQuestionsByTag('');
   }
 
   #getFollowUpScopeQuestions(decisionRoute: DecisionRoute): PromptChoice[] {
@@ -104,12 +114,23 @@ export class DecisionManager {
     }
     return choices;
   }
+  /**
+   * Get the followup questions once the initial questions have been asked for main
+   */
   getFollowUpMainQuestions(): PromptChoice[] {
     return this.#getFollowUpScopeQuestions(this.mainDecision);
   }
+
+  /**
+   * Get the followup questions once the initial questions have been asked for a fragment
+   */
   getFollowUpFragmentQuestions(): PromptChoice[] {
     return this.#getFollowUpScopeQuestions(this.mainDecision.fragment);
   }
+  /**
+   * Push the tags that correspond to an answer to internal stack
+   * @param tags a list of tags separated by a space
+   */
   pushAnswerTags(tags: string) {
     this.tagManager.push(tags.split(' '));
   }
@@ -122,9 +143,15 @@ export class DecisionManager {
       this.pushAnswerTags(tag);
     }
   }
+  /**
+   * Automatically push the tags that are expected for main
+   */
   pushMainAutoAnswerTags() {
     this.#pushScopeAutoAnswerTags(this.mainDecision);
   }
+  /**
+   * Automatically push the tags that are expected for a fragment
+   */
   pushFragmentAutoAnswerTags() {
     this.#pushScopeAutoAnswerTags(this.mainDecision.fragment);
   }
@@ -138,14 +165,24 @@ export class DecisionManager {
     }));
     return texts;
   }
+  /**
+   * Get an array of prompts for the main parameters
+   */
   getMainParameters(): PromptText[] {
     return this.#getScopeParameters(this.mainDecision);
   }
 
+  /**
+   * Get an array of prompts for the parameters of a fragment
+   */
   getFragmentParameters(): PromptText[] {
     return this.#getScopeParameters(this.mainDecision.fragment);
   }
 
+  /**
+   * Record all decisions taken by an user for main
+   * @param parameters a list of parameters with name and and value
+   */
   setMainDecisionTaken(parameters: ParameterValue[]) {
     const tagParameters: ParameterValue[] = this.tagManager
       .all()
@@ -154,6 +191,10 @@ export class DecisionManager {
     this.#resetTagManager();
   }
 
+  /**
+   * Record all decisions taken by an user for a fragment
+   * @param parameters a list of parameters with name and and value
+   */
   addFragmentDecisionTaken(parameters: ParameterValue[]) {
     const tagParameters: ParameterValue[] = this.tagManager
       .all()
@@ -165,6 +206,9 @@ export class DecisionManager {
     this.#resetTagManager();
   }
 
+  /**
+   * The overall decision taken by the user
+   */
   get overallDecision() {
     return this._overallDecision;
   }

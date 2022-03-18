@@ -1,4 +1,5 @@
 import Ajv, { JSONSchemaType } from 'ajv';
+import jetpack from 'fs-jetpack';
 import { MainDecision } from './decision.js';
 
 type Question = MainDecision['questions'][number];
@@ -140,6 +141,17 @@ export const decisionSchema: JSONSchemaType<MainDecision> = {
     'template',
     'fragment',
   ],
+};
+
+/**
+ * Write the JSON Schema for a decision document
+ * @param filename the filename for the JSON Schema
+ */
+export const writeJsonSchema = async (filename: string) => {
+  await jetpack.writeAsync(
+    filename,
+    JSON.stringify(decisionSchema, undefined, 2)
+  );
 };
 
 /**

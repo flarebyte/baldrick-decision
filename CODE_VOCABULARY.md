@@ -18,6 +18,7 @@ Table of vocabulary found in the code base
 | hydrate                          | 1          | decision-hydrator.ts |
 | hydrate parameters               | 2          | decision-hydrator.ts |
 | key value obj                    | 3          | decision-hydrator.ts |
+| write json schema                | 3          | decision-schema.ts   |
 | create main decision validator   | 4          | decision-schema.ts   |
 | question                         | 1          | decision-schema.ts   |
 | parameter                        | 1          | decision-schema.ts   |
@@ -56,10 +57,12 @@ Table showing the popularity of some n-gram in the code base
 | questions  | 3         |
 | question   | 3         |
 | open       | 3         |
+| write      | 2         |
 | run        | 2         |
 | is         | 2         |
 | create     | 2         |
 | parameters | 2         |
 | overall    | 2         |
 | key        | 2         |
+| json       | 2         |
 | another    | 2         |
