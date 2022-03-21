@@ -9,7 +9,7 @@ const titleMaxLength = 40;
 const descriptionMaxLength = 120;
 const tagsMaxLength = 200;
 const triggerMaxLength = 200;
-const templateMaxLength = 1000;
+const templateMaxLength = 10_000;
 
 const questionSchema: JSONSchemaType<Question> = {
   description: 'A question that will be presented as a selection',
